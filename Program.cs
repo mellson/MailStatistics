@@ -40,8 +40,9 @@ namespace MailStatistics
             }
 
             Logger.Out("");
-            var mostEmailsTo = Emails.ToLookup(message => message.To.ToString()).Select(messages => new Tuple<int, string>(messages.Count(), messages.Key)).OrderBy(tuple => tuple.Item1);
-            var mostEmailsFrom = Emails.ToLookup(message => message.From.ToString()).Select(messages => new Tuple<int, string>(messages.Count(), messages.Key)).OrderBy(tuple => tuple.Item1);
+            var mostEmailsTo = Emails.ToLookup(message => message.To.ToString()).OrderBy(m => m.Count());
+            var mostEmailsFrom = Emails.ToLookup(message => message.From.ToString()).OrderBy(m => m.Count());
+            
             PrintTopEmailers(mostEmailsTo, "sent to");
             PrintTopEmailers(mostEmailsFrom, "received from");
 
@@ -53,10 +54,10 @@ namespace MailStatistics
             Logger.WriteFile();
         }
 
-        private static void PrintTopEmailers(IEnumerable<Tuple<int, string>> mostEmailsTo, string text)
+        private static void PrintTopEmailers(IEnumerable<IGrouping<string, MimeMessage>> mostEmailsTo, string text)
         {
             foreach (var mail in mostEmailsTo.Reverse().Take(5))
-                Logger.Out(String.Format("{0,8} emails {2} {1}", mail.Item1, mail.Item2, text));
+                Logger.Out(String.Format("{0,8} emails {2} {1}", mail.Count(), mail.Key, text));
         }
 
         private static string TimePrinter(TimeSpan ts)
