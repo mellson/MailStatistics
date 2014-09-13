@@ -10,10 +10,8 @@ namespace MailStatistics
 {
     internal class Program
     {
-        #region User settings
         private const string Email = ""; // replace this with email address you are interested in getting statistics for
         private const string PathToMbox = @""; // replace this with a path to a .mbox file
-        #endregion User settings
 
         #region Fields
         static readonly IEnumerable<MimeMessage> Emails = GetMessagesFromMboxFile(PathToMbox).AsParallel().Take(300);
@@ -29,6 +27,15 @@ namespace MailStatistics
         /// </summary>
         private static void Main()
         {
+			// Check that the user has set the right settings
+            if (Email.Length == 0 || PathToMbox.Length == 0)
+            {
+                Logger.Out("You need to fill in the Email and the Path to your mbox file.", false);
+                Logger.Out("Press any key to close the app.", false);
+                Console.ReadKey();
+                return;
+            }
+
             // Write to console which file is being processed
             Logger.Out("Processing " + PathToMbox, writeToFile: false);
 
