@@ -14,6 +14,8 @@ For this application to work you need to change two things in Program.cs
 2. Set `private const string PathToMbox` to point to the path where your mbox file is located.
 On windows - you copy the full path for an individual file by holding down the Shift key as you right-click the file, and then choose Copy As Path.
 
+I recommend building and running this as a 64bit application on a machine with a large amount of ram.
+
 # Statistics
 The application will by default print the following statistics.
 
