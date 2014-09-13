@@ -27,7 +27,7 @@ namespace MailStatistics
         /// </summary>
         private static void Main()
         {
-			// Check that the user has set the right settings
+            // Check that the user has set the right settings
             if (Email.Length == 0 || PathToMbox.Length == 0)
             {
                 Logger.Out("You need to fill in the Email and the Path to your mbox file.", false);
