@@ -40,8 +40,8 @@ namespace MailStatistics
             }
 
             Logger.Out("");
-            var mostEmailsTo = Emails.ToLookup(message => message.To.ToString()).OrderBy(m => m.Count());
-            var mostEmailsFrom = Emails.ToLookup(message => message.From.ToString()).OrderBy(m => m.Count());
+            var mostEmailsTo = Emails.ToLookup(message => message.To.ToString()).OrderByDescending(m => m.Count());
+            var mostEmailsFrom = Emails.ToLookup(message => message.From.ToString()).OrderByDescending(m => m.Count());
             
             PrintTopEmailers(mostEmailsTo, "sent to");
             PrintTopEmailers(mostEmailsFrom, "received from");
@@ -56,7 +56,7 @@ namespace MailStatistics
 
         private static void PrintTopEmailers(IEnumerable<IGrouping<string, MimeMessage>> mostEmailsTo, string text)
         {
-            foreach (var mail in mostEmailsTo.Reverse().Take(5))
+            foreach (var mail in mostEmailsTo.Take(5))
                 Logger.Out(String.Format("{0,8} emails {2} {1}", mail.Count(), mail.Key, text));
         }
 
