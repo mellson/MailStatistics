@@ -14,7 +14,7 @@ namespace MailStatistics
         private const string PathToMbox = @""; // replace this with a path to a .mbox file
 
         #region Fields
-        static readonly IEnumerable<MimeMessage> Emails = GetMessagesFromMboxFile(PathToMbox).AsParallel().Take(300);
+        static readonly IEnumerable<MimeMessage> Emails = GetMessagesFromMboxFile(PathToMbox).AsParallel();
         private static int _counter = 1;
         private static int _countTo;
         private static string _replyString;
