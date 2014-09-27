@@ -10,11 +10,11 @@ namespace MailStatistics
 {
     internal class Program
     {
-        private const string Email = "anders@bechmellson.com"; // replace this with email address you are interested in getting statistics for
-        private const string PathToMbox = @"C:\Users\Anders Bech Mellson\Downloads\Alle mails inkl. Spam og Papirkurv.mbox"; // replace this with a path to a .mbox file
+        private const string Email = ""; // replace this with email address you are interested in getting statistics for
+        private const string PathToMbox = @""; // replace this with a path to a .mbox file
 
         #region Fields
-        static readonly IEnumerable<MimeMessage> Emails = GetMessagesFromMboxFile(PathToMbox).Take(5000);
+        static readonly IEnumerable<MimeMessage> Emails = GetMessagesFromMboxFile(PathToMbox).AsParallel();
         private static int _counter = 1;
         private static int _countTo;
         private static string _replyString;
