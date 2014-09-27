@@ -10,11 +10,11 @@ namespace MailStatistics
 {
     internal class Program
     {
-        private const string Email = ""; // replace this with email address you are interested in getting statistics for
-        private const string PathToMbox = @""; // replace this with a path to a .mbox file
+        private const string Email = "anders@bechmellson.com"; // replace this with email address you are interested in getting statistics for
+        private const string PathToMbox = @"C:\Users\Anders Bech Mellson\Downloads\Alle mails inkl. Spam og Papirkurv.mbox"; // replace this with a path to a .mbox file
 
         #region Fields
-        static readonly IEnumerable<MimeMessage> Emails = GetMessagesFromMboxFile(PathToMbox).AsParallel().Take(300);
+        static readonly IEnumerable<MimeMessage> Emails = GetMessagesFromMboxFile(PathToMbox).Take(5000);
         private static int _counter = 1;
         private static int _countTo;
         private static string _replyString;
@@ -48,6 +48,20 @@ namespace MailStatistics
 
             // Count the number of replies
             var replies = Emails.Where(MailReplyFromMe).ToArray();
+
+            // Find all the the thread starter emails
+            var threadStarters = new Dictionary<string, IEnumerable<MimeMessage>>();
+            foreach (var reply in replies)
+            {
+                var threadStarter = reply.References.First();
+                if (threadStarters.ContainsKey(threadStarter)) continue;
+                var thread = Emails.Where(m => m.References.Contains(threadStarter));
+                threadStarters.Add(threadStarter, thread);
+            }
+
+            // Calculate the response time for each reply in each thread
+            var threadReplytimes = threadStarters.Select(thread => thread.Value.Select(TimeForReply));
+
             _replyString = String.Format("{0} of these emails are replies sent by {1}", replies.Length, Email);
             Logger.Out(_replyString);
             _countTo = replies.Length;
@@ -132,6 +146,11 @@ namespace MailStatistics
         private static bool MailReplyFromMe(MimeMessage msg)
         {
             return !string.IsNullOrEmpty(msg.InReplyTo) && msg.From.ToString().Contains(Email) && !SubjectIndicatesForward(msg);
+        }
+
+        private static MimeMessage ThreadOrigin(MimeMessage msg)
+        {
+            return null;
         }
 
         /// <summary>
